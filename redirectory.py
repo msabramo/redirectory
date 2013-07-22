@@ -72,6 +72,7 @@ def stdout_to_file(name, mode='w', *open_args, **open_kwargs):
 
     Example:
 
+    >>> import os
     >>> import sys
     >>> from tempfile import NamedTemporaryFile
     >>> from six import u
@@ -88,6 +89,9 @@ def stdout_to_file(name, mode='w', *open_args, **open_kwargs):
     ...        data
     ...
     '1 - going to a file\n2 - going to a file\n'
+
+    >>> with stdout_to_file(os.devnull):
+    ...     print('hello')
     """
     with open(name, mode, *open_args, **open_kwargs) as file_obj:
         with redirect_file_obj('sys.stdout', file_obj):
