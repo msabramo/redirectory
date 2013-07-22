@@ -81,6 +81,16 @@ def test_stdin_from_file():
 
 
 #----------------------------------------------------------------------------
+# stdin_from with an iterable as input
+#----------------------------------------------------------------------------
+def test_stdin_from_iterable():
+    with stdin_from(['one', 'two', 'three']):
+        assert input() == 'one'
+        assert input() == 'two'
+        assert input() == 'three'
+
+
+#----------------------------------------------------------------------------
 # stdout_to captures stdout to a StringIO
 #----------------------------------------------------------------------------
 def test_stdout_to_StringIO():
