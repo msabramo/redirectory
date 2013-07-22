@@ -31,7 +31,18 @@ def stdin_from(replacement=None):
     ...     x = input()
     ...     y = input()
     ...     z = input()
+    >>> x
+    'one'
+    >>> y
+    'two'
+    >>> z
+    'three'
 
+    >>> generator = (x for x in ['one', 'two', 'three'])
+    >>> with stdin_from(generator):
+    ...    x = input()
+    ...    y = input()
+    ...    z = input()
     >>> x
     'one'
     >>> y
@@ -102,7 +113,7 @@ def redirect_file_obj(file_obj_name, replacement=None):
     # file_obj_name is one of ('sys.stdin', 'sys.stdout', 'sys.stderr')
     if hasattr(replacement, 'readline'):  # a file-like object
         file_obj = replacement
-    elif hasattr(replacement, 'count') and not hasattr(replacement, 'startswith'):  # an iterable
+    elif (hasattr(replacement, 'count') or hasattr(replacement, '__iter__')) and not hasattr(replacement, 'startswith'):  # an iterable
         file_obj = StringIO('\n'.join(replacement))
     else:
         # Try to convert to a file-like object; this works for unicode strings at least

@@ -91,6 +91,32 @@ def test_stdin_from_iterable():
 
 
 #----------------------------------------------------------------------------
+# stdin_from with a generator function as input
+#----------------------------------------------------------------------------
+def test_stdin_from_generator_function():
+    def generator_func():
+        for word in ['one', 'two', 'three']:
+            yield word
+
+    with stdin_from(generator_func()):
+        assert input() == 'one'
+        assert input() == 'two'
+        assert input() == 'three'
+
+
+#----------------------------------------------------------------------------
+# stdin_from with a generator expression as input
+#----------------------------------------------------------------------------
+def test_stdin_from_generator_expression():
+    generator = (x for x in ['one', 'two', 'three'])
+
+    with stdin_from(generator):
+        assert input() == 'one'
+        assert input() == 'two'
+        assert input() == 'three'
+
+
+#----------------------------------------------------------------------------
 # stdout_to captures stdout to a StringIO
 #----------------------------------------------------------------------------
 def test_stdout_to_StringIO():
