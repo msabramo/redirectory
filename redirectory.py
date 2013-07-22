@@ -61,7 +61,6 @@ def stdout_to(replacement=None):
 
     >>> with stdout_to() as s:
     ...     print('hello')
-    ...
     >>> s.getvalue()
     'hello\n'
     """
@@ -104,7 +103,7 @@ def stderr_to(replacement=None):
 
     >>> with stderr_to() as s:
     ...     _dummy = sys.stderr.write("bleargh\n")
-    ...     s.getvalue()
+    >>> s.getvalue()
     'bleargh\n'
     """
     return redirect_file_obj('sys.stderr', replacement)
