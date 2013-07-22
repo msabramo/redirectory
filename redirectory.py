@@ -109,6 +109,17 @@ def stderr_to(replacement=None):
     ...     _dummy = sys.stderr.write("bleargh\n")
     >>> s.getvalue()
     'bleargh\n'
+
+    >>> try:
+    ...     raise Exception("Simulate an error")
+    ... except:
+    ...     with stderr_to() as s:
+    ...         import traceback
+    ...         traceback.print_exc()
+    >>> 'Traceback (most recent call last):\n' in s.getvalue()
+    True
+    >>> 'Exception: Simulate an error' in s.getvalue()
+    True
     """
     return redirect_file_obj('sys.stderr', replacement)
 
