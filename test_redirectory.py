@@ -203,6 +203,10 @@ def test_stdout_to_and_stdin():
     assert input_return_value == 'bleargh'
 
 
+#----------------------------------------------------------------------------
+# stderr_fd_to_file captures stderr to a file,
+# including for subprocesses
+#----------------------------------------------------------------------------
 def test_stderr_fd_to_file():
     with NamedTemporaryFile() as temp_file:
         with stderr_fd_to_file(temp_file.name):
@@ -212,6 +216,10 @@ def test_stderr_fd_to_file():
             assert f.read() == '*** Hello there ***\n'
 
 
+#----------------------------------------------------------------------------
+# stderr_fd_to_file captures stderr to a file (os.devnull),
+# including for subprocesses
+#----------------------------------------------------------------------------
 def test_stderr_fd_to_os_devnull():
     with stderr_fd_to_file(os.devnull):
         os.system('echo "*** Hello there ***" 1>&2')
