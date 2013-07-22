@@ -1,10 +1,11 @@
 import sys
-from tempfile import TemporaryFile
+from tempfile import TemporaryFile, NamedTemporaryFile
 from six import u
 from six.moves import input, StringIO
 
 from redirectory import (
     stdin_from, stdout_to, stderr_to,
+    stdout_to_file,
     redirect_file_obj,
 )
 
@@ -84,6 +85,35 @@ def test_stdout_to_as_StringIO():
         sys.stdout.write(u("hello"))
 
     assert s.getvalue() == 'hello'
+
+
+#----------------------------------------------------------------------------
+# stdout_to_file captures stdout to a file; takes same args as open
+#----------------------------------------------------------------------------
+def test_stdout_to_file():
+    with NamedTemporaryFile(mode='r') as f:
+        with stdout_to_file(f.name):
+            sys.stdout.write(u("going to a file\n"))
+
+        with open(f.name) as f:
+            assert f.read() == 'going to a file\n'
+
+
+#----------------------------------------------------------------------------
+# stdout_to_file appending to a file
+#----------------------------------------------------------------------------
+def test_stdout_to_file_append():
+    with NamedTemporaryFile(mode='r') as f:
+        # Open file for writing
+        with stdout_to_file(f.name, 'w'):
+            sys.stdout.write(u("1 - going to a file\n"))
+
+        # Open file for appending
+        with stdout_to_file(f.name, 'a'):
+            sys.stdout.write(u("2 - going to a file\n"))
+
+        with open(f.name) as f:
+            assert f.read() == '1 - going to a file\n2 - going to a file\n'
 
 
 #----------------------------------------------------------------------------

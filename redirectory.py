@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from six.moves import StringIO
 from mock import patch
 
@@ -37,6 +39,12 @@ def stdout_to(replacement=None):
     'hello\n'
     """
     return redirect_file_obj('sys.stdout', replacement)
+
+@contextmanager
+def stdout_to_file(name, mode='w', *open_args, **open_kwargs):
+    with open(name, mode, *open_args, **open_kwargs) as file_obj:
+        with redirect_file_obj('sys.stdout', file_obj):
+            yield
 
 def stderr_to(replacement=None):
     """Redirect stderr to a StringIO.
