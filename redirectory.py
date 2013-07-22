@@ -126,7 +126,8 @@ def redirect_file_obj(file_obj_name, replacement=None):
     >>> z
     'three'
     """
-    # file_obj_name is one of ('sys.stdin', 'sys.stdout', 'sys.stderr')
+    # file_obj_name is typically one of ('sys.stdin', 'sys.stdout', 'sys.stderr')
+    # but it can be any valid `target` argument to the `mock.patch` function
     if hasattr(replacement, 'readline'):  # a file-like object
         file_obj = replacement
     elif (hasattr(replacement, 'count') or hasattr(replacement, '__iter__')) and not hasattr(replacement, 'startswith'):  # an iterable
