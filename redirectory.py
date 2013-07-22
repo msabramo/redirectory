@@ -109,6 +109,23 @@ def stderr_to(replacement=None):
     return redirect_file_obj('sys.stderr', replacement)
 
 def redirect_file_obj(file_obj_name, replacement=None):
+    r"""Redirect a file object somewhere else.
+
+    Examples:
+
+    >>> from six.moves import input
+
+    >>> with redirect_file_obj("sys.stdin", ["one", "two", "three"]):
+    ...    x = input()
+    ...    y = input()
+    ...    z = input()
+    >>> x
+    'one'
+    >>> y
+    'two'
+    >>> z
+    'three'
+    """
     # file_obj_name is one of ('sys.stdin', 'sys.stdout', 'sys.stderr')
     if hasattr(replacement, 'readline'):  # a file-like object
         file_obj = replacement
