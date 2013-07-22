@@ -1,3 +1,4 @@
+import os
 import sys
 from tempfile import TemporaryFile, NamedTemporaryFile
 from six import u
@@ -6,6 +7,7 @@ from six.moves import input, StringIO
 from redirectory import (
     stdin_from, stdout_to, stderr_to,
     stdout_to_file,
+    stderr_fd_to_file,
     redirect_file_obj,
 )
 
@@ -199,3 +201,17 @@ def test_stdout_to_and_stdin():
 
     assert stringio.getvalue() == 'bleargh'
     assert input_return_value == 'bleargh'
+
+
+def test_stderr_fd_to_file():
+    with NamedTemporaryFile() as temp_file:
+        with stderr_fd_to_file(temp_file.name):
+            os.system('echo "*** Hello there ***" 1>&2')
+
+        with open(temp_file.name) as f:
+            assert f.read() == '*** Hello there ***\n'
+
+
+def test_stderr_fd_to_os_devnull():
+    with stderr_fd_to_file(os.devnull):
+        os.system('echo "*** Hello there ***" 1>&2')
