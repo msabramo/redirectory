@@ -72,14 +72,10 @@ def test_stdin_from_str():
 # stdin_from with a file as input
 #----------------------------------------------------------------------------
 def test_stdin_from_file():
-    with TemporaryFile(mode='r+') as f:
-        f.write("one\ntwo\nthree\n")
-        f.seek(0)
-
-        with stdin_from(f):
-            assert input() == 'one'
-            assert input() == 'two'
-            assert input() == 'three'
+    with stdin_from(temp_file_1):
+        assert input() == 'one'
+        assert input() == 'two'
+        assert input() == 'three'
 
 
 #----------------------------------------------------------------------------
