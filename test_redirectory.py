@@ -9,22 +9,39 @@ from redirectory import (
     redirect_file_obj,
 )
 
-a_temp_file = TemporaryFile(mode='r+')
-a_temp_file.write("one\ntwo\nthree\n")
-a_temp_file.flush()
-a_temp_file.seek(0)
+temp_file_1 = TemporaryFile(mode='r+')
+temp_file_1.write("one\ntwo\nthree\n")
+temp_file_1.flush()
+temp_file_1.seek(0)
+
+temp_file_2 = TemporaryFile(mode='r+')
+temp_file_2.write("four\nfive\nsix\n")
+temp_file_2.flush()
+temp_file_2.seek(0)
 
 
 #----------------------------------------------------------------------------
 # redirect an arbitrary file object
 #----------------------------------------------------------------------------
-def test_redirect_fileobj():
-    target = 'test_redirectory.a_temp_file'
+def test_redirect_fileobj_to_str():
+    target = 'test_redirectory.temp_file_1'
 
     with redirect_file_obj(target, "ONE\nTWO\nTHREE\n"):
-        assert a_temp_file.readline() == 'ONE\n'
-        assert a_temp_file.readline() == 'TWO\n'
-        assert a_temp_file.readline() == 'THREE\n'
+        assert temp_file_1.readline() == 'ONE\n'
+        assert temp_file_1.readline() == 'TWO\n'
+        assert temp_file_1.readline() == 'THREE\n'
+
+
+#----------------------------------------------------------------------------
+# redirect an arbitrary file object
+#----------------------------------------------------------------------------
+def test_redirect_fileobj_to_fileobj():
+    target = 'test_redirectory.temp_file_1'
+
+    with redirect_file_obj(target, temp_file_2):
+        assert temp_file_1.readline() == 'four\n'
+        assert temp_file_1.readline() == 'five\n'
+        assert temp_file_1.readline() == 'six\n'
 
 
 #----------------------------------------------------------------------------
