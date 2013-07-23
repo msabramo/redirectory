@@ -158,6 +158,26 @@ def redirect_file_obj(file_obj_name, replacement=None):
     return patch(file_obj_name, file_obj)
 
 
+def stdin_fd_from_file(src_filename):
+    r"""Redirect stdin from a file, including for subprocesses
+
+    Examples:
+
+    # >>> from tempfile import NamedTemporaryFile
+    # >>>
+    # >>> with NamedTemporaryFile() as temp_file_in:
+    # ...     with NamedTemporaryFile() as temp_file_out:
+    # ...         temp_file_in.write(b"print(23 * 2)\n")
+    # ...         temp_file_in.flush()
+    # ...         with stdin_fd_from_file(temp_file_in.name):
+    # ...             with stdout_fd_to_file(temp_file_out.name):
+    # ...                 os.system('python')
+    # ...         with open(temp_file_out.name) as f:
+    # ...             assert f.read() == '46\n'
+    """
+    return stdchannel_redirected(sys.stdin, src_filename)
+
+
 def stdout_fd_to_file(dest_filename):
     r"""Redirect stdout to a file, including for subprocesses
 
@@ -208,7 +228,7 @@ def stdchannel_redirected(stdchannel, dest_filename):
 
     try:
         oldstdchannel = os.dup(stdchannel.fileno())
-        dest_file = open(dest_filename, 'w')
+        dest_file = open(dest_filename, 'r+')
         os.dup2(dest_file.fileno(), stdchannel.fileno())
 
         yield

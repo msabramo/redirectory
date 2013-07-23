@@ -7,6 +7,7 @@ from six.moves import input, StringIO
 from redirectory import (
     stdin_from, stdout_to, stderr_to,
     stdout_to_file,
+    stdin_fd_from_file,
     stdout_fd_to_file,
     stderr_fd_to_file,
     redirect_file_obj,
@@ -202,6 +203,24 @@ def test_stdout_to_and_stdin():
 
     assert stringio.getvalue() == 'bleargh'
     assert input_return_value == 'bleargh'
+
+
+#----------------------------------------------------------------------------
+# stdin_fd_from_file feeds stdin from a file,
+# including for subprocesses
+#----------------------------------------------------------------------------
+def test_stdin_fd_from_file():
+    with NamedTemporaryFile() as temp_file_in:
+        with NamedTemporaryFile() as temp_file_out:
+            temp_file_in.write(b"print(23 * 2)\n")
+            temp_file_in.flush()
+
+            with stdin_fd_from_file(temp_file_in.name):
+                with stdout_fd_to_file(temp_file_out.name):
+                    os.system('python')
+
+            with open(temp_file_out.name) as f:
+                assert f.read() == '46\n'
 
 
 #----------------------------------------------------------------------------
