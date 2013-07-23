@@ -226,14 +226,8 @@ def stdchannel_redirected(stdchannel, replacement_filename):
             libraries.append('rt')
     """
 
-    try:
+    with open(replacement_filename, 'r+') as replacement_file:
         oldstdchannel = os.dup(stdchannel.fileno())
-        replacement_file = open(replacement_filename, 'r+')
         os.dup2(replacement_file.fileno(), stdchannel.fileno())
-
         yield
-    finally:
-        if oldstdchannel is not None:
-            os.dup2(oldstdchannel, stdchannel.fileno())
-        if replacement_file is not None:
-            replacement_file.close()
+        os.dup2(oldstdchannel, stdchannel.fileno())
