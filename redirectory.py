@@ -169,17 +169,21 @@ def stdin_fd_from_file(src_filename):
 
     Examples:
 
-    # >>> from tempfile import NamedTemporaryFile
-    # >>>
-    # >>> with NamedTemporaryFile() as temp_file_in:
-    # ...     with NamedTemporaryFile() as temp_file_out:
-    # ...         temp_file_in.write(b"print(23 * 2)\n")
-    # ...         temp_file_in.flush()
-    # ...         with stdin_fd_from_file(temp_file_in.name):
-    # ...             with stdout_fd_to_file(temp_file_out.name):
-    # ...                 os.system('python')
-    # ...         with open(temp_file_out.name) as f:
-    # ...             assert f.read() == '46\n'
+    >>> from tempfile import NamedTemporaryFile
+    >>>
+    >>> with NamedTemporaryFile() as temp_file_in:
+    ...     with NamedTemporaryFile() as temp_file_out:
+    ...         code = 'import sys\n'
+    ...         code += 'sys.stderr.write("ans: %d" % (23 * 2))'
+    ...         _dummy = temp_file_in.write(code.encode('ascii'))
+    ...         temp_file_in.flush()
+    ...         with stdin_fd_from_file(temp_file_in.name):
+    ...             with stderr_fd_to_file(temp_file_out.name):
+    ...                 ret = os.system('python')
+    ...         with open(temp_file_out.name) as f:
+    ...             content = f.read()
+    >>> content
+    'ans: 46'
     """
     return stdchannel_redirected(sys.stdin, src_filename)
 
