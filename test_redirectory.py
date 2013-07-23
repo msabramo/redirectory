@@ -1,3 +1,5 @@
+from __future__ import with_statement
+
 import os
 import sys
 from tempfile import TemporaryFile, NamedTemporaryFile
@@ -212,7 +214,7 @@ def test_stdout_to_and_stdin():
 def test_stdin_fd_from_file():
     with NamedTemporaryFile() as temp_file_in:
         with NamedTemporaryFile() as temp_file_out:
-            temp_file_in.write(b"print(23 * 2)\n")
+            temp_file_in.write("print(23 * 2)\n".encode("ascii"))
             temp_file_in.flush()
 
             with stdin_fd_from_file(temp_file_in.name):
