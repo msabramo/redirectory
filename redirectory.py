@@ -206,10 +206,10 @@ def stderr_fd_to_file(dest_filename):
     >>> from tempfile import NamedTemporaryFile
     >>>
     >>> with NamedTemporaryFile() as temp_file:
-    ...    with stderr_fd_to_file(temp_file.name):
-    ...        ret = os.system('echo "*** Hello there ***" 1>&2')
-    ...    with open(temp_file.name) as f:
-    ...        content = f.read()
+    ...     with stderr_fd_to_file(temp_file.name):
+    ...         ret = os.system('echo "*** Hello there ***" 1>&2')
+    ...     with open(temp_file.name) as f:
+    ...         content = f.read()
     >>> content
     '*** Hello there ***\n'
     """
