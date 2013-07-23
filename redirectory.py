@@ -227,7 +227,16 @@ def stdchannel_redirected(stdchannel, replacement_filename):
     """
 
     with open(replacement_filename, 'r+') as replacement_file:
-        oldstdchannel = os.dup(stdchannel.fileno())
-        os.dup2(replacement_file.fileno(), stdchannel.fileno())
-        yield
-        os.dup2(oldstdchannel, stdchannel.fileno())
+        with fd_replaced(stdchannel.fileno(), replacement_file.fileno()):
+            yield
+
+
+@contextmanager
+def fd_replaced(fd1, fd2):
+    """
+    Context manager that temporarily makes fd1 point to same place as fd2
+    """
+    old_fd1 = os.dup(fd1)
+    os.dup2(fd2, fd1)
+    yield
+    os.dup2(old_fd1, fd1)
