@@ -235,8 +235,20 @@ def stdchannel_redirected(stdchannel, replacement_filename):
 
 @contextmanager
 def fd_replaced(fd1, fd2):
-    """
+    r"""
     Context manager that temporarily makes fd1 point to same place as fd2
+
+    Examples:
+
+    >>> from tempfile import NamedTemporaryFile
+    >>>
+    >>> with NamedTemporaryFile() as temp_file:
+    ...     with fd_replaced(sys.stderr.fileno(), temp_file.fileno()):
+    ...         ret = os.system('echo "*** Hello there ***" 1>&2')
+    ...     with open(temp_file.name) as f:
+    ...         content = f.read()
+    >>> content
+    '*** Hello there ***\n'
     """
     old_fd1 = os.dup(fd1)
     os.dup2(fd2, fd1)
