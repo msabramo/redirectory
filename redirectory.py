@@ -215,7 +215,7 @@ def stderr_fd_to_file(dest_filename):
 
 
 @contextmanager
-def stdchannel_redirected(stdchannel, dest_filename):
+def stdchannel_redirected(stdchannel, replacement_filename):
     """
     A context manager to temporarily redirect stdout or stderr
 
@@ -228,12 +228,12 @@ def stdchannel_redirected(stdchannel, dest_filename):
 
     try:
         oldstdchannel = os.dup(stdchannel.fileno())
-        dest_file = open(dest_filename, 'r+')
-        os.dup2(dest_file.fileno(), stdchannel.fileno())
+        replacement_file = open(replacement_filename, 'r+')
+        os.dup2(replacement_file.fileno(), stdchannel.fileno())
 
         yield
     finally:
         if oldstdchannel is not None:
             os.dup2(oldstdchannel, stdchannel.fileno())
-        if dest_file is not None:
-            dest_file.close()
+        if replacement_file is not None:
+            replacement_file.close()
