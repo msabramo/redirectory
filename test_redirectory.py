@@ -7,6 +7,7 @@ from six.moves import input, StringIO
 from redirectory import (
     stdin_from, stdout_to, stderr_to,
     stdout_to_file,
+    stdout_fd_to_file,
     stderr_fd_to_file,
     redirect_file_obj,
 )
@@ -201,6 +202,28 @@ def test_stdout_to_and_stdin():
 
     assert stringio.getvalue() == 'bleargh'
     assert input_return_value == 'bleargh'
+
+
+#----------------------------------------------------------------------------
+# stdout_fd_to_file captures stdout to a file,
+# including for subprocesses
+#----------------------------------------------------------------------------
+def test_stdout_fd_to_file():
+    with NamedTemporaryFile() as temp_file:
+        with stdout_fd_to_file(temp_file.name):
+            os.system('echo "*** Hello there ***"')
+
+        with open(temp_file.name) as f:
+            assert f.read() == '*** Hello there ***\n'
+
+
+#----------------------------------------------------------------------------
+# stdout_fd_to_file captures stdout to a file (os.devnull),
+# including for subprocesses
+#----------------------------------------------------------------------------
+def test_stdout_fd_to_os_devnull():
+    with stdout_fd_to_file(os.devnull):
+        os.system('echo "*** Hello there ***"')
 
 
 #----------------------------------------------------------------------------

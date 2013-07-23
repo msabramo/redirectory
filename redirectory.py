@@ -158,6 +158,24 @@ def redirect_file_obj(file_obj_name, replacement=None):
     return patch(file_obj_name, file_obj)
 
 
+def stdout_fd_to_file(dest_filename):
+    r"""Redirect stdout to a file, including for subprocesses
+
+    Examples:
+
+    # >>> from tempfile import NamedTemporaryFile
+    # >>>
+    # >>> with NamedTemporaryFile() as temp_file:
+    # ...    with stdout_fd_to_file(temp_file.name):
+    # ...        ret = os.system('echo "*** Hello there ***"')
+    # ...    with open(temp_file.name) as f:
+    # ...        content = f.read()
+    # >>> content
+    # '*** Hello there ***\n'
+    """
+    return stdchannel_redirected(sys.stdout, dest_filename)
+
+
 def stderr_fd_to_file(dest_filename):
     r"""Redirect stderr to a file, including for subprocesses
 
