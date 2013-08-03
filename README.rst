@@ -6,6 +6,9 @@ redirectory
 
 Fill this in...
 
+The original motivation for this is in this blog post:
+http://marc-abramowitz.com/archives/2013/07/19/python-context-manager-for-redirected-stdout-and-stderr/
+
 There is some long and confusing background in
 http://bugs.python.org/issue15805 — where that started out as a very simple
 context manager that doesn't deal with subprocesses, then folks suggested a
