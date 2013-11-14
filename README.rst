@@ -4,6 +4,10 @@ redirectory
 .. image:: https://secure.travis-ci.org/msabramo/redirectory.png
    :target: http://travis-ci.org/msabramo/redirectory
 
+.. image:: https://coveralls.io/repos/msabramo/redirectory/badge.png
+  :target: https://coveralls.io/r/msabramo/redirectory
+
+
 Fill this in...
 
 The original motivation for this is in this blog post:
